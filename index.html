@@ -29,7 +29,7 @@ a{color:inherit}
   border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
 .hdr-title{font-size:18px;font-weight:700;letter-spacing:2px;color:#1e293b}
 .hdr-sub{font-size:10px;color:#64748b;letter-spacing:3px;font-family:monospace}
-.hdr-right{display:flex;align-items:center;gap:12px}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .live-pill{display:flex;align-items:center;gap:6px;background:rgba(0,229,160,.1);
   border:1px solid rgba(0,229,160,.3);padding:4px 12px;border-radius:20px;font-size:11px;
   color:#00e5a0;font-family:monospace}
@@ -802,6 +802,224 @@ td{color:#334155}
 .d-val-lbl { font-family: monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #475569; margin-bottom: 8px; }
 .d-val-num { font-size: 24px; font-weight: 800; }
 /* ── END DOMESTIC-STYLE DASHBOARD ─────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE LAYOUT — Mobile / Tablet / Desktop
+   Breakpoints: 
+     Mobile  : max-width 640px
+     Tablet  : 641px – 1024px
+     Desktop : 1025px+
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Base: ensure full-width on all screens ─────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: hidden; }
+#app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.pages { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.pg { overflow-y: auto; }
+.pg.on { display: flex; flex-direction: column; }
+
+/* ── Header responsive ──────────────────────────────────────────── */
+.hdr { padding: 10px 16px; flex-shrink: 0; }
+.hdr-title { font-size: 16px; }
+#ts { font-size: 11px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Tabs responsive ────────────────────────────────────────────── */
+.tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-shrink: 0; display: flex; white-space: nowrap; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex-shrink: 0; padding: 10px 14px; font-size: 10px; }
+
+/* ── Table scroll ───────────────────────────────────────────────── */
+.tscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { min-width: 700px; }
+
+/* ── Route map rows scroll ──────────────────────────────────────── */
+#route-list { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.rrow { min-width: 900px; }
+
+/* ══════════════════════════════════════════════════════
+   TABLET — 641px to 1024px
+   ══════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+
+  /* Header */
+  .hdr { padding: 8px 14px; }
+  .hdr-title { font-size: 14px; letter-spacing: 1px; }
+  .hdr-sub { display: none; }
+  #ts { max-width: 160px; font-size: 10px; }
+  .live-pill { font-size: 9px; padding: 3px 8px; }
+
+  /* Dashboard filter bar */
+  .dash-filters { padding: 10px 14px; }
+  .df-selects { flex-wrap: wrap; gap: 6px; }
+  .df-sel { font-size: 11px; padding: 5px 8px; }
+  .df-checks { gap: 8px; }
+  .df-chk { font-size: 11px; padding: 3px 6px; }
+
+  /* KPI cards — 3 per row on tablet */
+  .d-kpis { grid-template-columns: repeat(3, 1fr) !important; gap: 8px; }
+  .d-kpi-val { font-size: 22px; }
+
+  /* Charts — 2 col on tablet */
+  .d-charts-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+  .d-charts-grid .d-card:last-child { grid-column: 1 / -1; }
+
+  /* Value row — 2 col */
+  .d-val-row { grid-template-columns: 1fr 1fr !important; }
+  .d-val-row .d-val-card:last-child { grid-column: 1 / -1; }
+
+  /* Month tiles */
+  .month-tiles { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)) !important; gap: 6px; }
+
+  /* Tracker layout */
+  .tracker-layout { grid-template-columns: 240px 1fr !important; }
+
+  /* Route map */
+  #pg-map .panel { padding: 12px; }
+
+  /* Stats grid */
+  .stats-grid, #stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Income statement */
+  #pg-income-statement [style*="grid-template-columns:1.1fr 0.9fr"] { 
+    display: grid; 
+    grid-template-columns: 1fr !important; 
+  }
+  #pg-income-statement [style*="grid-template-columns:repeat(6"] { 
+    grid-template-columns: repeat(3, 1fr) !important; 
+  }
+  #pg-income-statement [style*="grid-template-columns:repeat(4"] { 
+    grid-template-columns: repeat(2, 1fr) !important; 
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE — max 640px
+   ══════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+
+  /* Header — compact */
+  .hdr { padding: 8px 12px; }
+  .hdr-title { font-size: 13px; letter-spacing: 0; }
+  .hdr-sub { display: none; }
+  .hdr-icon { width: 28px; height: 28px; font-size: 14px; }
+  #ts { display: none; }
+  .live-pill { font-size: 9px; padding: 2px 6px; }
+  .hdr-right { gap: 6px; }
+
+  /* Tabs — scrollable, smaller */
+  .tab { padding: 8px 10px; font-size: 9px; letter-spacing: 0.5px; }
+
+  /* Dashboard filter bar — stack vertically */
+  .dash-filters { padding: 8px 10px; gap: 8px; }
+  .df-group { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .df-checks { gap: 5px; }
+  .df-chk { font-size: 11px; padding: 3px 6px; }
+  .df-selects { gap: 5px; }
+  .df-field { width: calc(50% - 3px); }
+  .df-sel { font-size: 11px; width: 100%; }
+  .df-clr { width: 100%; margin-top: 2px; }
+
+  /* Insight bar */
+  .insight-bar { font-size: 11px; padding: 8px 12px; }
+
+  /* Month tiles — 4 per row on mobile */
+  .month-tiles { grid-template-columns: repeat(4, 1fr) !important; gap: 5px; }
+  .mt b { font-size: 9px; }
+  .mt .mt-val { font-size: 11px; }
+  .mt .mt-bgt { display: none; }
+  .mt .mt-pct { font-size: 9px; padding: 1px 4px; }
+
+  /* KPI cards — 2 per row on mobile */
+  .d-kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+  .d-kpi { padding: 10px 12px; gap: 8px; }
+  .d-kpi-icon { width: 34px; height: 34px; font-size: 14px; }
+  .d-kpi-val { font-size: 20px; }
+  .d-kpi-lbl { font-size: 9px; }
+  .d-kpi-sub { font-size: 10px; }
+
+  /* Charts — single column */
+  .d-charts-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  .d-card { padding: 12px; }
+  .d-card h2 { font-size: 10px; margin-bottom: 8px; }
+
+  /* Value row — single column */
+  .d-val-row { grid-template-columns: 1fr !important; gap: 8px; }
+  .d-val-num { font-size: 20px; }
+
+  /* Dash body padding */
+  .dash-body { padding: 10px 10px; gap: 10px; }
+
+  /* Table */
+  .tbl-hdr { padding: 10px 12px; }
+  .tbl-hdr h2 { font-size: 12px; }
+  table { font-size: 11px; }
+  table th, table td { padding: 6px 8px; }
+
+  /* Delay panel */
+  .dpanel { padding: 12px; }
+  .dpanel-hdr { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .dcards { grid-template-columns: 1fr !important; }
+
+  /* Tracker — stack sidebar below map */
+  .tracker-layout { grid-template-columns: 1fr !important; grid-template-rows: auto 300px !important; }
+  .t-sidebar { order: 2; overflow-y: auto; max-height: 300px; }
+  #wmap { order: 1; height: 300px !important; }
+
+  /* Route map */
+  #pg-map { padding: 8px !important; }
+  .rrow.hdr { display: none; } /* hide header row, show inline labels */
+
+  /* Stats */
+  .stats-grid, #stats-grid { grid-template-columns: 1fr !important; }
+  .panel { padding: 12px; }
+  .panel-hdr { font-size: 10px; }
+
+  /* Open orders */
+  #pg-open-orders { padding: 10px !important; }
+
+  /* Income statement */
+  #pg-income-statement [style*="grid-template-columns:repeat(6"] { 
+    grid-template-columns: repeat(2, 1fr) !important; 
+  }
+  #pg-income-statement [style*="grid-template-columns:repeat(4"] { 
+    grid-template-columns: repeat(2, 1fr) !important; 
+  }
+  #pg-income-statement [style*="grid-template-columns:1.1fr 0.9fr"] { 
+    grid-template-columns: 1fr !important; 
+  }
+  #pg-income-statement [style*="grid-template-columns:repeat(3"] { 
+    grid-template-columns: repeat(2, 1fr) !important; 
+  }
+
+  /* User bar */
+  #user-bar { padding: 6px 10px; font-size: 10px; }
+
+  /* Login gate */
+  #login-gate { padding: 20px 16px !important; }
+  #login-gate > div { max-width: 100% !important; padding: 20px !important; }
+
+  /* Port chips */
+  .port-bar { padding: 6px 10px; font-size: 11px; flex-wrap: wrap; }
+
+  /* Donut chart */
+  .donut-wrap { flex-direction: column; align-items: center; }
+  #donut { width: 100px !important; height: 100px !important; }
+  .legend { margin-top: 8px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   LARGE DESKTOP — 1400px+
+   ══════════════════════════════════════════════════════ */
+@media (min-width: 1400px) {
+  .d-kpis { grid-template-columns: repeat(6, 1fr); }
+  .d-charts-grid { grid-template-columns: 1.3fr 1.3fr 0.7fr; }
+  .month-tiles { grid-template-columns: repeat(12, 1fr); }
+  .hdr-title { font-size: 20px; }
+  #ts { max-width: 320px; font-size: 13px; }
+}
+/* ── END RESPONSIVE ─────────────────────────────────── */
+
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -811,7 +1029,7 @@ td{color:#334155}
 <body>
 
 <!-- MICROSOFT SSO LOGIN GATE -->
-<div id="login-gate" style="position:fixed;inset:0;background:#f1f5f9;display:flex;align-items:center;justify-content:center;z-index:99999;flex-direction:column;gap:16px">
+<div id="login-gate" style="position:fixed;inset:0;background:#f1f5f9;display:flex;align-items:center;justify-content:center;z-index:99999;flex-direction:column;gap:16px;padding:20px;overflow-y:auto">
   <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:40px 44px;max-width:440px;width:90%;box-shadow:0 4px 32px rgba(0,0,0,.1);text-align:center">
     <!-- Pigeon Logo area -->
     <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px">
