@@ -1666,6 +1666,15 @@ td{color:#334155}
 </div>
 
 <script>
+// ── SharePoint Graph API config ───────────────────────────────────────────
+const SP_SITE_HOST   = 'pigeonsg.sharepoint.com';
+const SP_SITE_PATH   = '/sites/Ops';
+const SP_LIBRARY     = 'OvsShipping';
+const SP_FOLDER      = 'Export weekly report';
+const SP_FILE        = '2026 Shipment Listings.xlsx';
+const SP_SHEET_DATA  = 'Listing';
+const SP_SHEET_BUDGET= 'Budget';
+// Legacy Google Sheets URLs kept as fallback
 const LURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRd8Cpk_IMkB6BeaUL507aH0vlU4kEdzeOJN_Alqh3WCMcxJt3H1bFfqEqc-56UYQ/pub?gid=1821933926&single=true&output=csv";
 const BURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRd8Cpk_IMkB6BeaUL507aH0vlU4kEdzeOJN_Alqh3WCMcxJt3H1bFfqEqc-56UYQ/pub?gid=993002773&single=true&output=csv";
 const SURL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRd8Cpk_IMkB6BeaUL507aH0vlU4kEdzeOJN_Alqh3WCMcxJt3H1bFfqEqc-56UYQ/pub?gid=192804925&single=true&output=csv';
@@ -3321,77 +3330,87 @@ function pRow(row){var r=[],c='',q=false;for(var i=0;i<row.length;i++){var ch=ro
 function cv(r){var keys=Array.from(arguments).slice(1);for(var k of keys){if(r[k]!==undefined&&r[k]!==''&&r[k]!==null)return r[k];}return'';}
 
 async function loadLive(){
-  lp(20,'Connecting to Google Sheets...'); console.log('[loadLive] Trying LURL:', LURL);
-  async function fetchURL(url){
-    var errs=[];
-    // Method 1: Direct fetch (works on Netlify/hosted with CORS)
-    try{
-      var r1=await fetch(url+'&t='+Date.now(),{cache:'no-store'});
-      if(r1.ok){var t1=await r1.text();if(t1&&t1.length>100){console.log('[fetch] Direct OK:'+t1.length+'b');return t1;}}
-    }catch(e1){errs.push('direct:'+e1.message);}
-    // Method 2: corsproxy.io
-    try{
-      var r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-store'});
-      if(r2.ok){var t2=await r2.text();if(t2&&t2.length>100){console.log('[fetch] corsproxy OK:'+t2.length+'b');return t2;}}
-    }catch(e2){errs.push('corsproxy:'+e2.message);}
-    // Method 3: allorigins raw
-    try{
-      var r3=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(url));
-      if(r3.ok){var t3=await r3.text();if(t3&&t3.length>100){console.log('[fetch] allorigins-raw OK:'+t3.length+'b');return t3;}}
-    }catch(e3){errs.push('allorigins-raw:'+e3.message);}
-    // Method 4: allorigins JSON
-    try{
-      var r4=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url));
-      if(r4.ok){var j4=await r4.json();if(j4.contents&&j4.contents.length>100){console.log('[fetch] allorigins-json OK:'+j4.contents.length+'b');return j4.contents;}}
-    }catch(e4){errs.push('allorigins-json:'+e4.message);}
-    // Method 5: Try pubhtml and parse HTML table as CSV fallback
-    try{
-      var htmlUrl=url.replace('/pub?','/pubhtml?').replace('&output=csv','').replace('output=csv&','');
-      var r5=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(htmlUrl));
-      if(r5.ok){
-        var j5=await r5.json();
-        if(j5.contents&&j5.contents.length>500){
-          var csv5=htmlTableToCSV(j5.contents);
-          if(csv5&&csv5.split('\n').length>2){console.log('[fetch] pubhtml-parsed OK:'+csv5.length+'b');return csv5;}
-        }
-      }
-    }catch(e5){errs.push('pubhtml:'+e5.message);}
-    console.error('[fetch] ALL methods failed:',errs.join('; '));
-    throw new Error('All fetch methods failed. Using embedded data. Errors: '+errs.slice(0,2).join('; '));
+  // ── Try SharePoint Graph API first, fall back to Google Sheets CSV ─────────
+  lp(10,'Authenticating...');
+
+  // ── Graph API helper ───────────────────────────────────────────────────────
+  async function graphGet(url){
+    var tok=sessionStorage.getItem('auth_token');
+    if(!tok) throw new Error('No auth token — please sign in first');
+    var r=await fetch('https://graph.microsoft.com/v1.0'+url,{
+      headers:{Authorization:'Bearer '+tok,'Accept':'application/json'}
+    });
+    if(!r.ok){
+      var body=await r.text();
+      throw new Error('Graph '+r.status+': '+body.slice(0,200));
+    }
+    return r.json();
   }
 
-  // Parse HTML table from pubhtml into CSV string
-  function htmlTableToCSV(html){
-    var rows=[];
-    var trMatches=html.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)||[];
-    trMatches.forEach(function(tr){
-      var cells=[];
-      var cellMatches=tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)||[];
-      cellMatches.forEach(function(td){
-        var text=td.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&#39;/g,"'").trim();
-        cells.push('"'+text.replace(/"/g,'""')+'"');
-      });
-      if(cells.length>0) rows.push(cells.join(','));
+  // ── Read Excel sheet rows via Graph API ────────────────────────────────────
+  async function readSheet(siteId, driveId, fileId, sheetName){
+    // Get worksheet list
+    var wsRes=await graphGet('/sites/'+siteId+'/drives/'+driveId+'/items/'+fileId+'/workbook/worksheets');
+    var ws=wsRes.value.find(function(w){return w.name.toLowerCase()===sheetName.toLowerCase();});
+    if(!ws) throw new Error('Sheet "'+sheetName+'" not found. Available: '+wsRes.value.map(function(w){return w.name;}).join(', '));
+    // Get used range
+    var rng=await graphGet('/sites/'+siteId+'/drives/'+driveId+'/items/'+fileId+'/workbook/worksheets/'+encodeURIComponent(ws.id)+'/usedRange');
+    var vals=rng.values;
+    if(!vals||vals.length<2) throw new Error('No data in sheet "'+sheetName+'"');
+    // Convert to array of objects
+    var headers=vals[0].map(function(h){return String(h||'').trim();});
+    return vals.slice(1).filter(function(row){return row.some(function(c){return c!==null&&c!=='';});}).map(function(row){
+      var obj={};
+      headers.forEach(function(h,i){obj[h]=row[i]!==null&&row[i]!==undefined?String(row[i]):'';});
+      // Also store positional keys for column-index access
+      row.forEach(function(v,i){obj['_col'+i]=v!==null&&v!==undefined?String(v):'';});
+      return obj;
     });
-    return rows.join('\n');
   }
-  try{
-    lp(30,'Fetching shipment listings...');
-    var lcsv=await fetchURL(LURL);
-    lp(60,'Fetching budget data...');
-    var bcsv=await fetchURL(BURL);
-    lp(80,'Processing...');
-    var lrows=pCSV(lcsv);
-    console.log('Live rows:',lrows.length,'Headers:',Object.keys(lrows[0]||{}).join(', '));
-    var mapped=lrows.filter(r=>cv(r,'Invoice No.','InvoiceNo','Invoice','invoice')).map(function(r){
+
+  // ── Fetch via SharePoint Graph ─────────────────────────────────────────────
+  async function fetchFromSharePoint(){
+    lp(20,'Connecting to SharePoint...');
+    // Get site ID
+    var site=await graphGet('/sites/'+SP_SITE_HOST+':'+SP_SITE_PATH);
+    var siteId=site.id;
+    // Get drive (document library)
+    var drives=await graphGet('/sites/'+siteId+'/drives');
+    var drive=drives.value.find(function(d){return d.name.toLowerCase()===SP_LIBRARY.toLowerCase();});
+    if(!drive) throw new Error('Library "'+SP_LIBRARY+'" not found');
+    var driveId=drive.id;
+    lp(35,'Finding Excel file...');
+    // Get file ID
+    var filePath=SP_FOLDER+'/'+SP_FILE;
+    var fileRes=await graphGet('/sites/'+siteId+'/drives/'+driveId+'/root:/'+encodeURIComponent(SP_FOLDER)+'/'+encodeURIComponent(SP_FILE));
+    var fileId=fileRes.id;
+    lp(50,'Reading Listing sheet...');
+    var dataRows=await readSheet(siteId,driveId,fileId,SP_SHEET_DATA);
+    console.log('[SP] Listing rows:',dataRows.length,'Headers:',Object.keys(dataRows[0]||{}).slice(0,10).join(', '));
+    lp(70,'Reading Budget sheet...');
+    var budgetRows=await readSheet(siteId,driveId,fileId,SP_SHEET_BUDGET);
+    console.log('[SP] Budget rows:',budgetRows.length);
+    return {dataRows:dataRows, budgetRows:budgetRows};
+  }
+
+  // ── Fetch via Google Sheets CSV fallback ───────────────────────────────────
+  async function fetchURL(url){
+    var errs=[];
+    try{var r1=await fetch(url+'&t='+Date.now(),{cache:'no-store'});if(r1.ok){var t1=await r1.text();if(t1&&t1.length>100){console.log('[fetch] Direct OK:'+t1.length+'b');return t1;}}}catch(e1){errs.push('direct:'+e1.message);}
+    try{var r2=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{cache:'no-store'});if(r2.ok){var t2=await r2.text();if(t2&&t2.length>100){console.log('[fetch] corsproxy OK:'+t2.length+'b');return t2;}}}catch(e2){errs.push('corsproxy:'+e2.message);}
+    try{var r3=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(url));if(r3.ok){var t3=await r3.text();if(t3&&t3.length>100){console.log('[fetch] allorigins OK:'+t3.length+'b');return t3;}}}catch(e3){errs.push('allorigins:'+e3.message);}
+    throw new Error('All fetch methods failed: '+errs.slice(0,2).join('; '));
+  }
+
+  // ── Process data rows (shared between SP and CSV path) ────────────────────
+  function processShipmentRows(lrows){
+    console.log('Live rows:',lrows.length,'Headers:',Object.keys(lrows[0]||{}).slice(0,20).join(', '));
+    var mapped=lrows.filter(function(r){return cv(r,'Invoice No.','InvoiceNo','Invoice','invoice');}).map(function(r){
       var sgd=parseFloat(cv(r,'Inv Amt(SGD)','InvAmtSGD','Inv Amt SGD','Invoice Amount SGD')||0)||0;
       var fc=parseFloat(cv(r,'Inv Amt(FC)','InvAmtFC','Inv Amt FC')||0)||0;
-      var etdR=cv(r,'ETD','Actual ETD','Actual ETD ','etd');var plnR=cv(r,'Planned ETD','PlannedETD','Plan ETD');
-      // Parse DD/MM/YYYY format from the actual CSV
-      function parseDMY(s){ if(!s||!s.trim())return null;
-        var m=s.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-        if(m) return new Date(+m[3],+m[2]-1,+m[1]);
-        var d=new Date(s); return isNaN(d)?null:d; }
+      var etdR=cv(r,'ETD','Actual ETD','Actual ETD ','etd');
+      var plnR=cv(r,'Planned ETD','PlannedETD','Plan ETD');
+      function parseDMY(s){if(!s||!s.trim())return null;var m=s.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);var d=new Date(s);return isNaN(d)?null:d;}
       var etdD=parseDMY(etdR),plnD=parseDMY(plnR);
       var etd=etdD&&!isNaN(etdD)?etdD.toISOString().slice(0,10):'';
       var pln=plnD&&!isNaN(plnD)?plnD.toISOString().slice(0,10):'';
@@ -3403,66 +3422,80 @@ async function loadLive(){
       var curr=cv(r,'Curr','Currency','CURR')||'SGD';
       var remarks=cv(r,'Remarks','REMARKS','Remark','Notes');
       var days=parseFloat(cv(r,'Days Delayed','DaysDelayed','DAYS DELAYED')||0)||0;
-      // Derive month from ETD date — Col W is unreliable (has currency codes)
-      var _etdM = etd||pln||'';
-      var _moName = '';
-      if(_etdM){
-        var _dm=_etdM.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if(_dm){
-          var _MN=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-          _moName = _MN[parseInt(_dm[2])]||'';
-          if(_moName) _moName += ' '+_dm[1].slice(2);
-        }
-      }
-      // Fallback: Col W only if it's a real month name
-      if(!_moName){
-        var _wv=(r._colW||cv(r,'Month Name','MonthName','Month')||'').trim();
-        var _VM=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        if(_VM.indexOf(_wv)>=0) _moName=_wv;
-      }
-      var month = _moName;
+      var _etdM=etd||pln||'';var _moName='';
+      if(_etdM){var _dm=_etdM.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(_dm){var _MN=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];_moName=(_MN[parseInt(_dm[2])]||'');if(_moName)_moName+=' '+_dm[1].slice(2);}}
       var risk=cv(r,'Risk','RISK','Risk Level');
       var invSGD=sgd||(curr==='SGD'?fc:fc/SGD2USD);
-      // Column K (index 10) = Vessel Name, Column L (index 11) = Voyage No (confirmed by user)
-      // Column K (index 10) = "Vessel Name", Column L (index 11) = "Voyage No." (confirmed from CSV)
-      var _vKeys = Object.keys(r);
-      var _kRaw  = (_vKeys[10] ? (r[_vKeys[10]]||'').trim() : '') || cv(r,'Vessel Name','VesselName','Vessel','MV');
-      var _lRaw  = (_vKeys[11] ? (r[_vKeys[11]]||'').trim() : '') || cv(r,'Voyage No.','Voyage No','VoyageNo','VOY');
-      // Guard: reject if vessel name is a number (misaligned row)
-      var _kIsNum=false; try{if(_kRaw&&!isNaN(parseFloat(_kRaw.replace(/,/g,''))))_kIsNum=true;}catch(e){}
-      var vesselName = _kIsNum ? '' : _kRaw;
-      var voyageNo   = _lRaw;
-      if(!window._colLogged){ window._colLogged=true;
-        console.log('[CSV Col K] header="'+_vKeys[10]+'" val="'+_kRaw+'" | [Col L] header="'+_vKeys[11]+'" val="'+_lRaw+'"'); }
+      // Vessel/Voyage from named columns or positional (col K=10, col L=11)
+      var vesselName=cv(r,'Vessel Name','VesselName','Vessel','MV')||(r['_col10']||'');
+      var voyageNo=cv(r,'Voyage No.','Voyage No','VoyageNo','VOY')||(r['_col11']||'');
+      var imo=cv(r,'IMO','IMO No','IMO Number')||(r['_col12']||'');
+      if(vesselName&&!isNaN(parseFloat(vesselName.replace(/,/g,''))))vesselName='';
       return{invoice:inv,custName:cust,shipFrom:from,shipTo:to,country:extC(to),curr:curr,
         invSGD:invSGD,invUSD:invSGD/SGD2USD,etd:etd,plannedEtd:pln,status:status,rawStatus:rawSt,
-        remarks:remarks,daysDelayed:days,monthName:month,risk:risk,etdMonth:etd?etd.slice(0,7):'',
-        vessel:vesselName||'',voyage:voyageNo||''};
+        remarks:remarks,daysDelayed:days,monthName:_moName,risk:risk,etdMonth:etd?etd.slice(0,7):'',
+        vessel:vesselName||'',voyage:voyageNo||'',imo:imo||''};
     });
-    if(mapped.length>0){D.shipments=mapped;console.log('Loaded '+mapped.length+' live records');}
-    else{console.warn('No records mapped from live data - keeping embedded data');}
-    // Budget
-    var brows=pCSV(bcsv);var newBudget={};
+    return mapped;
+  }
+
+  function processBudgetRows(brows){
+    var newBudget={};
     brows.forEach(function(r){
-      var mRaw=cv(r,'Month','MONTH','Period','month');var bSGD=parseFloat(cv(r,'Revised Target Sales Amt(SGD)','Budget SGD','BudgetSGD','Target SGD','Budget')||0)||0;
-      if(!mRaw||!bSGD)return;var d=new Date(mRaw);if(isNaN(d))return;
+      var mRaw=cv(r,'Month','MONTH','Period','month','Date');
+      var bSGD=parseFloat(cv(r,'Revised Target Sales Amt(SGD)','Budget SGD','BudgetSGD','Target SGD','Budget','Amount','SGD')||0)||0;
+      if(!mRaw||!bSGD)return;
+      var d=new Date(mRaw);if(isNaN(d))return;
       newBudget[d.toISOString().slice(0,7)]={budgetSGD:bSGD,budgetUSD:bSGD/SGD2USD};
     });
-    if(Object.keys(newBudget).length>0)D.budget=newBudget;
-    lp(100,'✓ Live: '+D.shipments.length+' shipments'); console.log('[loadLive] SUCCESS:', D.shipments.length, 'shipments loaded');
-    setTimeout(hl,400);
-    document.getElementById('ts').textContent='🔴 LIVE — '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' SGT · '+D.shipments.length+' records';
-    init();
-  }catch(e){
-    console.error('Live fetch error:',e);
-    lp(100,'Using embedded data');
-    console.warn('[loadLive] Error:', e.message);
-    var bn=document.getElementById('banner'),bm=document.getElementById('bmsg');
-    if(bm)bm.innerHTML='<b>Live data unavailable</b> — showing embedded 2026 data. <a href="#" onclick="loadLive();return false" style="color:#f59e0b;text-decoration:underline">🔄 Retry</a>';
-    if(bn)bn.style.display='flex';
-    setTimeout(hl,800);
-    init();
+    return newBudget;
   }
+
+  // ── Main fetch logic: SharePoint first, CSV fallback ─────────────────────
+  var usedSP=false;
+  try{
+    lp(15,'Trying SharePoint Graph API...');
+    var spData=await fetchFromSharePoint();
+    var mapped=processShipmentRows(spData.dataRows);
+    var newBudget=processBudgetRows(spData.budgetRows);
+    if(mapped.length>0){D.shipments=mapped;usedSP=true;console.log('[SP] Loaded',mapped.length,'shipments');}
+    if(Object.keys(newBudget).length>0){D.budget=newBudget;console.log('[SP] Budget months:',Object.keys(newBudget).length);}
+    if(!mapped.length)throw new Error('No shipment rows mapped from SharePoint');
+  }catch(spErr){
+    console.warn('[SP] SharePoint failed:',spErr.message,'. Trying Google Sheets...');
+    try{
+      lp(30,'Fetching from Google Sheets...');
+      var lcsv=await fetchURL(LURL);
+      lp(60,'Fetching budget...');
+      var bcsv=await fetchURL(BURL);
+      lp(80,'Processing...');
+      var lrows=pCSV(lcsv);
+      var mapped=processShipmentRows(lrows);
+      var brows=pCSV(bcsv);
+      var newBudget=processBudgetRows(brows);
+      if(mapped.length>0){D.shipments=mapped;console.log('[GS] Loaded',mapped.length,'shipments');}
+      if(Object.keys(newBudget).length>0){D.budget=newBudget;}
+      if(!mapped.length)throw new Error('No shipment rows from Google Sheets either');
+    }catch(gsErr){
+      console.error('[GS] Also failed:',gsErr.message);
+      throw new Error('Both SharePoint and Google Sheets failed. SP: '+spErr.message.slice(0,80)+' | GS: '+gsErr.message.slice(0,80));
+    }
+  }
+
+  lp(90,'Rendering...');
+  var src=usedSP?'SharePoint':'Google Sheets';
+  D.shipments=D.shipments||[];
+  if(D.shipments.length>0){
+    console.log('[loadLive] SUCCESS:',D.shipments.length,'shipments from',src);
+    lp(100,'✓ Live: '+D.shipments.length+' shipments from '+src);
+    document.getElementById('ts').textContent='🔴 LIVE ['+src+'] — '+new Date().toLocaleTimeString('en-SG',{hour:'2-digit',minute:'2-digit'})+' SGT · '+D.shipments.length+' records';
+    setTimeout(hl,400);
+    init();
+  }else{
+    throw new Error('No data loaded from any source');
+  }
+}
+
 }
 
 window.addEventListener('resize',function(){if(page==='map')renderMap();if(page==='tracker')drawTracker();});
@@ -3536,7 +3569,7 @@ async function msSignIn(){
   sessionStorage.setItem('pkce_v',v);
   window.location.href='https://login.microsoftonline.com/'+TENANT_ID+'/oauth2/v2.0/authorize'
     +'?client_id='+CLIENT_ID+'&response_type=code&redirect_uri='+encodeURIComponent(REDIRECT_URI)
-    +'&scope='+encodeURIComponent('openid profile email User.Read Files.Read Files.Read.All')
+    +'&scope='+encodeURIComponent('openid profile email User.Read Files.Read Files.Read.All Sites.Read.All')
     +'&response_mode=query&code_challenge='+ch+'&code_challenge_method=S256&prompt=select_account';
 }
 function msSignOut(){sessionStorage.clear();showGate();window.location.href='https://login.microsoftonline.com/'+TENANT_ID+'/oauth2/v2.0/logout?post_logout_redirect_uri='+encodeURIComponent(REDIRECT_URI);}
@@ -3550,7 +3583,7 @@ async function initAuth(){
   if(qs.code){
     var vr=sessionStorage.getItem('pkce_v');if(!vr){showGate();return false;}
     try{
-      var r=await fetch('https://login.microsoftonline.com/'+TENANT_ID+'/oauth2/v2.0/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'client_id='+CLIENT_ID+'&grant_type=authorization_code&code='+encodeURIComponent(qs.code)+'&redirect_uri='+encodeURIComponent(REDIRECT_URI)+'&code_verifier='+vr+'&scope='+encodeURIComponent('openid profile email User.Read Files.Read Files.Read.All')});
+      var r=await fetch('https://login.microsoftonline.com/'+TENANT_ID+'/oauth2/v2.0/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'client_id='+CLIENT_ID+'&grant_type=authorization_code&code='+encodeURIComponent(qs.code)+'&redirect_uri='+encodeURIComponent(REDIRECT_URI)+'&code_verifier='+vr+'&scope='+encodeURIComponent('openid profile email User.Read Files.Read Files.Read.All Sites.Read.All')});
       var d=await r.json();if(d.error)throw new Error(d.error_description||d.error);
       var cl=parseJWT(d.id_token||d.access_token);if(!cl)throw new Error('Token parse failed');
       sessionStorage.setItem('auth_token',d.access_token||d.id_token);
