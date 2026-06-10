@@ -302,7 +302,7 @@ td{padding:8px 12px;white-space:nowrap;max-width:180px;overflow:hidden;text-over
 .map-card-hdr h3{font-family:monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:#c0c4cc}
 #wmap{width:100%;height:480px;background:#ffffff;display:block}
 .route-tbl{background:#ffffff;border:1px solid #e2e8f0;border-radius:9px;overflow:hidden}
-.rrow{display:grid;grid-template-columns:120px 120px 65px 50px 50px 50px 65px 90px 75px 75px 75px 90px 75px 65px 1fr;gap:5px;padding:9px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;transition:.12s}
+.rrow{display:grid;grid-template-columns:130px 130px 75px 55px 55px 55px 70px 100px 80px 80px 80px 1fr;gap:6px;padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:12px;transition:.12s}
 .rrow:hover{background:#f8fafc}
 .rrow:last-child{border-bottom:none}
 .rrow.hdr{font-family:monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:#475569;background:#f8fafc}
@@ -522,7 +522,7 @@ input.f[type=date]{color-scheme:light}
 
 /* Main content area */
 .main{background:#f1f5f9}
-#pg-stats,#pg-map,#pg-tracker,#pg-delay-analysis{background:#f1f5f9}
+#pg-stats,#pg-map,#pg-tracker{background:#f1f5f9}
 #pg-dash{background:#f1f5f9}
 
 /* KPI Cards */
@@ -686,8 +686,6 @@ td{color:#334155}
 .vprog{background:#f1f5f9}
 .vpf{background:linear-gradient(90deg,#059669,#0ea5e9)}
 
-/* Delay analysis */
-#pg-delay-analysis .panel,#da-kpis>div,.sc{background:#ffffff}
 #da-kpis>div{background:#ffffff;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
 .cause{color:#fff}
 .c-conflict{background:#dc2626;border-color:#b91c1c}
@@ -741,6 +739,69 @@ td{color:#334155}
 ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:#94a3b8}
 
+
+/* ── DOMESTIC-STYLE DASHBOARD ──────────────────────────────────────── */
+#pg-dash { flex-direction: column !important; overflow-y: auto; padding: 0; }
+
+/* Filter bar */
+.dash-filters {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.df-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.df-lbl { font-family: monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #475569; display: block; margin-bottom: 3px; }
+.df-checks { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.df-chk { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; padding: 4px 8px; border-radius: 6px; border: 1px solid #e2e8f0; background: #f8fafc; transition: .12s; }
+.df-chk:hover { border-color: #cbd5e1; background: #fff; }
+.df-chk input { cursor: pointer; }
+.df-cnt { font-family: monospace; font-size: 10px; background: #e2e8f0; padding: 1px 5px; border-radius: 8px; color: #475569; }
+.df-selects { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+.df-field { display: flex; flex-direction: column; }
+.df-sel { background: #f8fafc; border: 1px solid #e2e8f0; color: #1e293b; padding: 6px 10px; border-radius: 7px; font-size: 12px; cursor: pointer; outline: none; }
+.df-sel:focus { border-color: #00e5a0; }
+.df-clr { padding: 7px 14px; background: transparent; border: 1px solid #e2e8f0; color: #64748b; border-radius: 7px; font-size: 12px; cursor: pointer; transition: .15s; }
+.df-clr:hover { border-color: #ff6b35; color: #ff6b35; }
+
+/* Dash body */
+.dash-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Insight bar */
+.insight-bar { background: linear-gradient(90deg, #f0fdf4, #eff6ff); border: 1px solid #bbf7d0; border-radius: 9px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: #166534; }
+.ib-dot { width: 8px; height: 8px; border-radius: 50%; background: #00e5a0; flex-shrink: 0; animation: pulse 2s infinite; }
+
+/* Month tiles */
+.month-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+.mt { background: #fff; border: 1px solid #e2e8f0; border-radius: 9px; padding: 10px 12px; text-align: center; }
+.mt b { font-family: monospace; font-size: 11px; color: #475569; display: block; margin-bottom: 4px; }
+.mt .mt-pct { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-family: monospace; font-weight: 700; margin-bottom: 5px; }
+.mt .mt-val { font-size: 13px; font-weight: 700; color: #1e293b; }
+.mt .mt-bgt { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+
+/* KPI cards (domestic-style with icon circles) */
+.d-kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.d-kpi { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden; }
+.d-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--acc); border-radius: 3px 3px 0 0; }
+.d-kpi-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--acc); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; opacity: .85; }
+.d-kpi-lbl { font-family: monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #475569; margin-bottom: 4px; }
+.d-kpi-val { font-size: 28px; font-weight: 800; line-height: 1; color: var(--acc); }
+.d-kpi-sub { font-size: 11px; color: #64748b; margin-top: 3px; font-family: monospace; }
+
+/* Charts grid (3-col) */
+.d-charts-grid { display: grid; grid-template-columns: 1.2fr 1.2fr 0.8fr; gap: 12px; }
+.d-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+.d-card h2 { font-family: monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #475569; margin: 0 0 12px; display: flex; justify-content: space-between; align-items: center; }
+.d-subtotal { color: #00e5a0; font-size: 12px; }
+
+/* Value row */
+.d-val-row { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 12px; }
+.d-val-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+.d-val-lbl { font-family: monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #475569; margin-bottom: 8px; }
+.d-val-num { font-size: 24px; font-weight: 800; }
+/* ── END DOMESTIC-STYLE DASHBOARD ─────────────────────────────────── */
 </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -829,101 +890,146 @@ td{color:#334155}
     <button class="tab"     onclick="goPage('stats')">📋 Statistics</button>
     <button class="tab"     onclick="goPage('map')">🗺 Route Map</button>
     <button class="tab"     onclick="goPage('tracker')">📡 Live Tracker</button>
-    <button class="tab" onclick="goPage('delay-analysis')">⚠️ Delay Analysis</button>
+
     <button class="tab" onclick="goPage('open-orders')">🛒 Open Orders</button>
     <button class="tab" onclick="goPage('income-statement')">📈 Income Statement</button>
   </div>
 
   <div class="pages">
     <div class="pg on" id="pg-dash">
-      <aside class="sidebar">
-        <div class="sb-sec">
-          <h4>Shipment Status</h4>
-          <div class="sb-btns">
-            <button class="sb-btn g" onclick="setAll(true)">✓ All</button>
-            <button class="sb-btn r" onclick="setAll(false)">✕ None</button>
-          </div>
-          <label class="chk-row"><input type="checkbox" value="Shipped" checked onchange="doFilter()">
-            <span class="chk-dot" style="background:#00e5a0"></span>
-            <span class="chk-lbl">✅ Shipped</span>
-            <span class="chk-cnt" style="background:rgba(0,229,160,.1);color:#00e5a0" id="c-Shipped">0</span>
-          </label>
-          <label class="chk-row"><input type="checkbox" value="In Progress" checked onchange="doFilter()">
-            <span class="chk-dot" style="background:#00b8ff"></span>
-            <span class="chk-lbl">🚢 In Progress</span>
-            <span class="chk-cnt" style="background:rgba(0,184,255,.1);color:#00b8ff" id="c-In Progress">0</span>
-          </label>
-          <label class="chk-row"><input type="checkbox" value="Plan" checked onchange="doFilter()">
-            <span class="chk-dot" style="background:#a78bfa"></span>
-            <span class="chk-lbl">📅 Plan</span>
-            <span class="chk-cnt" style="background:rgba(167,139,250,.1);color:#a78bfa" id="c-Plan">0</span>
-          </label>
-          <label class="chk-row"><input type="checkbox" value="Booking Secured" checked onchange="doFilter()">
-            <span class="chk-dot" style="background:#fbbf24"></span>
-            <span class="chk-lbl">🔒 Booking Secured</span>
-            <span class="chk-cnt" style="background:rgba(251,191,36,.1);color:#fbbf24" id="c-Booking Secured">0</span>
-          </label>
-          <label class="chk-row"><input type="checkbox" value="Delayed" checked onchange="doFilter()">
-            <span class="chk-dot" style="background:#ff4757"></span>
-            <span class="chk-lbl">⚠️ Delayed</span>
-            <span class="chk-cnt" style="background:rgba(255,71,87,.1);color:#ff4757" id="c-Delayed">0</span>
-          </label>
-        </div>
-        <div class="sb-sec"><h4>Country</h4><select class="f" id="f-country" onchange="doFilter()"><option value="">All Countries</option></select></div>
-        <div class="sb-sec"><h4>Ship From</h4><select class="f" id="f-from" onchange="doFilter()"><option value="">All Origins</option></select></div>
-        <div class="sb-sec"><h4>Ship To</h4><select class="f" id="f-to" onchange="doFilter()"><option value="">All Destinations</option></select></div>
-        <div class="sb-sec"><h4>Customer</h4><select class="f" id="f-cust" onchange="doFilter()"><option value="">All Customers</option></select></div>
-        <div class="sb-sec"><h4>Month</h4><select class="f" id="f-month" onchange="doFilter()"><option value="">All Months</option></select></div>
-        <div class="sb-sec"><h4>ETD Range</h4>
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <input type="date" class="f" id="f-etd1" onchange="doFilter()">
-            <input type="date" class="f" id="f-etd2" onchange="doFilter()">
-          </div>
-        </div>
-        <div class="sb-sec"><h4>Search</h4><input type="text" class="f" id="f-q" placeholder="Invoice, vessel, customer..." oninput="doFilter()"></div>
-        <button class="clr-btn" onclick="clearAll()">✕ Clear All Filters</button>
-      </aside>
 
-      <main class="main">
-        <div class="kpis">
-          <div class="kpi k1"><div class="kpi-l">✅ Shipped</div><div class="kpi-v" id="k1">0</div><div class="kpi-s">shipments</div></div>
-          <div class="kpi k2"><div class="kpi-l">🚢 In Progress</div><div class="kpi-v" id="k2">0</div><div class="kpi-s">at sea</div></div>
-          <div class="kpi k3"><div class="kpi-l">📅 Plan / Booked</div><div class="kpi-v" id="k3">0</div><div class="kpi-s">scheduled</div></div>
-          <div class="kpi k4"><div class="kpi-l">⚠️ Delayed</div><div class="kpi-v" id="k4">0</div><div class="kpi-s" id="k4s">—</div></div>
-          <div class="kpi k5"><div class="kpi-l">Total</div><div class="kpi-v" id="k5">0</div><div class="kpi-s" id="k5s">SGD 0</div></div>
-        </div>
-        <div class="ch-row">
-          <div class="panel">
-            <div class="panel-hdr">Budget vs Actual (SGD) — % vs Target<span id="bpct" style="color:#00e5a0">—</span></div>
-            <div id="bchart"></div>
+      <!-- ── FILTER BAR (Domestic-style top bar) ─────────────────────── -->
+      <div class="dash-filters">
+        <div class="df-group">
+          <label class="df-lbl">Status</label>
+          <div class="df-checks">
+            <label class="df-chk"><input type="checkbox" value="Shipped" checked onchange="doFilter()"><span style="color:#00e5a0">✅ Shipped</span> <span class="df-cnt" id="c-Shipped">0</span></label>
+            <label class="df-chk"><input type="checkbox" value="In Progress" checked onchange="doFilter()"><span style="color:#00b8ff">🚢 In Progress</span> <span class="df-cnt" id="c-In Progress">0</span></label>
+            <label class="df-chk"><input type="checkbox" value="Plan" checked onchange="doFilter()"><span style="color:#a78bfa">📅 Plan</span> <span class="df-cnt" id="c-Plan">0</span></label>
+            <label class="df-chk"><input type="checkbox" value="Booking Secured" checked onchange="doFilter()"><span style="color:#fbbf24">🔒 Booking Secured</span> <span class="df-cnt" id="c-Booking Secured">0</span></label>
+            <label class="df-chk"><input type="checkbox" value="Delayed" checked onchange="doFilter()"><span style="color:#ff4757">⚠️ Delayed</span> <span class="df-cnt" id="c-Delayed">0</span></label>
           </div>
-          <div class="panel">
-            <div class="panel-hdr">Status Breakdown</div>
+        </div>
+        <div class="df-selects">
+          <div class="df-field"><label class="df-lbl">Country</label><select class="df-sel" id="f-country" onchange="doFilter()"><option value="">All Countries</option></select></div>
+          <div class="df-field"><label class="df-lbl">Ship From</label><select class="df-sel" id="f-from" onchange="doFilter()"><option value="">All Origins</option></select></div>
+          <div class="df-field"><label class="df-lbl">Ship To</label><select class="df-sel" id="f-to" onchange="doFilter()"><option value="">All Destinations</option></select></div>
+          <div class="df-field"><label class="df-lbl">Customer</label><select class="df-sel" id="f-cust" onchange="doFilter()"><option value="">All Customers</option></select></div>
+          <div class="df-field"><label class="df-lbl">Month</label><select class="df-sel" id="f-month" onchange="doFilter()"><option value="">All Months</option></select></div>
+          <div class="df-field"><label class="df-lbl">ETD From</label><input type="date" class="df-sel" id="f-etd1" onchange="doFilter()"></div>
+          <div class="df-field"><label class="df-lbl">ETD To</label><input type="date" class="df-sel" id="f-etd2" onchange="doFilter()"></div>
+          <div class="df-field"><label class="df-lbl">Search</label><input type="text" class="df-sel" id="f-q" placeholder="Invoice, vessel, customer..." oninput="doFilter()"></div>
+          <div class="df-field"><label class="df-lbl">Action</label><button class="df-clr" onclick="clearAll()">✕ Clear</button></div>
+        </div>
+      </div>
+
+      <!-- ── MAIN CONTENT ─────────────────────────────────────────────── -->
+      <div class="dash-body">
+
+        <!-- Row 1: insight bar -->
+        <div class="insight-bar" id="insight-bar">
+          <div class="ib-dot"></div>
+          <span id="ib-text">Loading live data…</span>
+        </div>
+
+        <!-- Row 2: month tiles -->
+        <div class="month-tiles" id="month-tiles"></div>
+
+        <!-- Row 3: KPI cards (Domestic style with icon circles) -->
+        <div class="d-kpis">
+          <div class="d-kpi" style="--acc:#00e5a0">
+            <div class="d-kpi-icon">🚢</div>
+            <div class="d-kpi-body">
+              <div class="d-kpi-lbl">Total Shipments</div>
+              <div class="d-kpi-val" id="k5">0</div>
+              <div class="d-kpi-sub" id="k5s">SGD 0</div>
+            </div>
+          </div>
+          <div class="d-kpi" style="--acc:#e8504f">
+            <div class="d-kpi-icon">%</div>
+            <div class="d-kpi-body">
+              <div class="d-kpi-lbl">Actual vs Budget</div>
+              <div class="d-kpi-val" id="dk-achieve">0%</div>
+              <div class="d-kpi-sub">against target</div>
+            </div>
+          </div>
+          <div class="d-kpi" style="--acc:#fbbf24">
+            <div class="d-kpi-icon">🎯</div>
+            <div class="d-kpi-body">
+              <div class="d-kpi-lbl">Budget to Go</div>
+              <div class="d-kpi-val" id="dk-togo">SGD 0</div>
+              <div class="d-kpi-sub">remaining gap</div>
+            </div>
+          </div>
+          <div class="d-kpi" style="--acc:#ff4757">
+            <div class="d-kpi-icon">⚠</div>
+            <div class="d-kpi-body">
+              <div class="d-kpi-lbl">Delayed</div>
+              <div class="d-kpi-val" id="k4">0</div>
+              <div class="d-kpi-sub" id="k4s">avg — days</div>
+            </div>
+          </div>
+          <div class="d-kpi" style="--acc:#a78bfa">
+            <div class="d-kpi-icon">📅</div>
+            <div class="d-kpi-body">
+              <div class="d-kpi-lbl">Plan / Booked</div>
+              <div class="d-kpi-val" id="k3">0</div>
+              <div class="d-kpi-sub">scheduled</div>
+            </div>
+          </div>
+          <div class="d-kpi" style="--acc:#00b8ff">
+            <div class="d-kpi-icon">✅</div>
+            <div class="d-kpi-body">
+              <div class="d-kpi-lbl">Shipped</div>
+              <div class="d-kpi-val" id="k1">0</div>
+              <div class="d-kpi-sub" id="k1s">completed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: Charts grid (3 charts like Domestic) -->
+        <div class="d-charts-grid">
+          <div class="d-card">
+            <h2>Shipment Trend <span class="d-subtotal" id="trend-total"></span></h2>
+            <canvas id="trendChart" height="160"></canvas>
+          </div>
+          <div class="d-card">
+            <h2>Budget vs Actual <span class="d-subtotal" id="bpct-lbl"></span></h2>
+            <canvas id="bc" height="160"></canvas>
+            <div id="budget-total-lbl" style="font-size:11px;color:#9ca3af;margin-top:6px"></div>
+          </div>
+          <div class="d-card">
+            <h2>Status Breakdown</h2>
             <div class="donut-wrap">
-              <canvas id="donut" width="110" height="110"></canvas>
+              <canvas id="donut" width="120" height="120"></canvas>
               <div id="dleg" class="legend"></div>
             </div>
           </div>
         </div>
-        <div class="val-row">
-          <div class="val-card">
-            <div class="val-lbl">Total Value — SGD</div>
-            <div class="val-total" id="vsgd" style="color:#00e5a0">SGD 0</div>
-            <div id="vsgd-b"></div>
+
+        <!-- Row 5: Value cards + port filter -->
+        <div class="d-val-row">
+          <div class="d-val-card">
+            <div class="d-val-lbl">Total Invoice Value — SGD</div>
+            <div class="d-val-num" id="vsgd" style="color:#00e5a0">SGD 0</div>
+            <div id="vsgd-b" style="margin-top:8px"></div>
           </div>
-          <div class="val-card">
-            <div class="val-lbl">Total Value — USD (est.)</div>
-            <div class="val-total" id="vusd" style="color:#00b8ff">USD 0</div>
-            <div id="vusd-b"></div>
+          <div class="d-val-card">
+            <div class="d-val-lbl">Total Invoice Value — USD</div>
+            <div class="d-val-num" id="vusd" style="color:#00b8ff">USD 0</div>
+            <div id="vusd-b" style="margin-top:8px"></div>
+          </div>
+          <div class="d-val-card" style="flex:2">
+            <div class="d-val-lbl">🚢 Port Filter</div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px">
+              <div id="pchips" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+              <button id="clr-port" class="df-clr" onclick="setPort('')" style="display:none">✕ Clear Port</button>
+            </div>
           </div>
         </div>
-        <div id="month-grid-container" class="month-grid" style="padding:0 0 4px 0"></div>
-        <div class="port-bar">
-          <span class="port-lbl">🚢 Port Filter</span>
-          <div id="pchips" style="display:flex;gap:5px;flex-wrap:wrap"></div>
-          <button id="clr-port" class="abtn" onclick="setPort('')" style="display:none;margin-left:auto">✕ Clear Port</button>
-        </div>
-        <div class="tbl-wrap">
+
+        <!-- Row 6: Shipment table -->
+        <div class="d-card" style="padding:0;overflow:hidden">
           <div class="tbl-hdr"><h2>Shipment Listings</h2><span class="rec-count" id="rcnt">0 records</span></div>
           <div class="tscroll">
             <table>
@@ -944,6 +1050,8 @@ td{color:#334155}
             </table>
           </div>
         </div>
+
+        <!-- Row 7: Delay intelligence panel -->
         <div class="dpanel">
           <div class="dpanel-hdr">
             <div class="dtitle"><div class="dpulse"></div>Delay Intelligence — Affected Shipments</div>
@@ -955,7 +1063,8 @@ td{color:#334155}
           </div>
           <div class="dcards" id="dcards"></div>
         </div>
-      </main>
+
+      </div><!-- end dash-body -->
     </div>
 
     <div class="pg" id="pg-stats">
@@ -1074,9 +1183,6 @@ td{color:#334155}
           <span class="sh" onclick="sortMap('eta')" style="color:#fbbf24">🏁 ETA</span>
           <span class="sh" onclick="sortMap('sg')" style="color:#00e5a0">💰 Value</span>
           <span class="sh" style="color:#475569">Status Mix</span>
-          <span class="sh" style="color:#0ea5e9">🚢 Vessel</span>
-          <span class="sh" style="color:#7c3aed">⚓ Voyage</span>
-          <span class="sh" style="color:#64748b">IMO</span>
         </div>
         <div id="rrows"></div>
         <div style="padding:8px 16px;font-family:monospace;font-size:10px;color:#94a3b8;background:#ffffff;border-top:1px solid #e2e8f0">📦 TEU est. at SGD 60,000/container avg &nbsp;·&nbsp; 💲 Freight = base rate + 20% surcharges (2026 market estimates) &nbsp;·&nbsp; Click any row to highlight on map</div>
@@ -1268,87 +1374,6 @@ td{color:#334155}
       </div>
     </div>
   </div>
-
-    <!-- ── DELAY ANALYSIS PAGE ── -->
-    <div class="pg" id="pg-delay-analysis" style="flex-direction:column;overflow-y:auto;padding:18px 20px;gap:14px">
-
-      <!-- FILTER BAR -->
-      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:9px;padding:12px 16px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span style="font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#64748b;flex-shrink:0">Filters</span>
-          <select id="da-month1" onchange="renderDelayAnalysis()" style="background:#f8fafc;border:1px solid #2d3340;color:#1e293b;padding:6px 10px;border-radius:7px;font-size:12px;cursor:pointer;outline:none;appearance:none;min-width:120px">
-            <option value="">From Month</option>
-            <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
-            <option>May</option><option>Jun</option><option>Jul</option><option>Aug</option>
-            <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
-          </select>
-          <span style="color:#64748b;font-size:12px">→</span>
-          <select id="da-month2" onchange="renderDelayAnalysis()" style="background:#f8fafc;border:1px solid #2d3340;color:#1e293b;padding:6px 10px;border-radius:7px;font-size:12px;cursor:pointer;outline:none;appearance:none;min-width:120px">
-            <option value="">To Month</option>
-            <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
-            <option>May</option><option>Jun</option><option>Jul</option><option>Aug</option>
-            <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
-          </select>
-          <select id="da-country" onchange="renderDelayAnalysis()" style="background:#f8fafc;border:1px solid #2d3340;color:#1e293b;padding:6px 10px;border-radius:7px;font-size:12px;cursor:pointer;outline:none;appearance:none;min-width:150px">
-            <option value="">🌍 All Countries</option>
-          </select>
-          <select id="da-cause" onchange="renderDelayAnalysis()" style="background:#f8fafc;border:1px solid #2d3340;color:#1e293b;padding:6px 10px;border-radius:7px;font-size:12px;cursor:pointer;outline:none;appearance:none;min-width:160px">
-            <option value="">All Causes</option>
-            <option value="Conflict/Reroute">⚔ Conflict / Reroute</option>
-            <option value="Port/Capacity">⚓ Port / Capacity</option>
-            <option value="Vessel Delay">🚢 Vessel Delay</option>
-            <option value="Payment/Docs">📋 Payment / Docs</option>
-            <option value="Booking/Carrier">🏭 Booking / Carrier</option>
-            <option value="Other">⚠ Other</option>
-          </select>
-          <input type="text" id="da-search" placeholder="Search invoice, customer, remarks..." oninput="renderDelayAnalysis()"
-            style="background:#f8fafc;border:1px solid #2d3340;color:#1e293b;padding:6px 10px;border-radius:7px;font-size:12px;outline:none;min-width:220px">
-          <button onclick="clearDAFilters()" style="background:transparent;border:1px solid #2d3340;color:#64748b;padding:6px 12px;border-radius:7px;font-size:11px;cursor:pointer;font-family:monospace;margin-left:auto" onmouseover="this.style.borderColor='#ff6b35';this.style.color='#ff6b35'" onmouseout="this.style.borderColor='#2d3340';this.style.color='#6b7280'">✕ Clear</button>
-        </div>
-      </div>
-
-      <!-- KPI CARDS -->
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px" id="da-kpis"></div>
-
-      <!-- CHARTS ROW -->
-      <div style="display:grid;grid-template-columns:1.3fr 0.7fr;gap:14px">
-        <!-- Monthly bar chart -->
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:9px;padding:14px 16px">
-          <div style="font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#64748b;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-            Monthly Delay Value (SGD)
-            <span id="da-chart-legend" style="display:flex;gap:12px;font-size:10px"></span>
-          </div>
-          <canvas id="da-bar-chart" height="160"></canvas>
-        </div>
-        <!-- Cause breakdown donut -->
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:9px;padding:14px 16px">
-          <div style="font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#64748b;margin-bottom:12px">Delay Cause Breakdown</div>
-          <div style="display:flex;align-items:center;gap:14px">
-            <canvas id="da-donut" width="110" height="110" style="flex-shrink:0"></canvas>
-            <div id="da-donut-legend" style="flex:1;display:flex;flex-direction:column;gap:7px"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- COUNTRY BAR CHART -->
-      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:9px;padding:14px 16px">
-        <div style="font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#64748b;margin-bottom:12px">Delay Impact by Country — Count & Value (SGD)</div>
-        <div id="da-country-chart"></div>
-      </div>
-
-      <!-- DELAYED SHIPMENTS TABLE + REMARKS -->
-      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:9px;overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#ff4757;display:flex;align-items:center;gap:7px">
-            <div style="width:7px;height:7px;border-radius:50%;background:#ff4757;animation:blink 1.5s ease-in-out infinite"></div>
-            Delayed Shipment Details & Remarks
-          </div>
-          <span id="da-count-label" style="font-family:monospace;font-size:11px;color:#ff4757">0 shipments</span>
-        </div>
-        <div id="da-cards" style="max-height:600px;overflow-y:auto"></div>
-      </div>
-
-    </div><!-- end pg-delay-analysis -->
 
     <!-- ── OPEN ORDERS PAGE ── -->
     <div class="pg" id="pg-open-orders" style="flex-direction:column;overflow-y:auto;padding:16px 20px;gap:14px;background:#f1f5f9">
@@ -1878,6 +1903,7 @@ function render(){
     renderKPIs(src);
     renderTable(data);
     try{renderBudget(src);}catch(e){}
+    try{renderTrendChart(src);}catch(e){}
     try{renderDonut(src);}catch(e){}
     try{renderVals(src);}catch(e){}
     try{buildPortChips();}catch(e){}
@@ -1889,7 +1915,6 @@ function srt(c){if(sCol===c)sDir*=-1;else{sCol=c;sDir=1;}document.querySelectorA
 
 function renderKPIs(data){
   if(!data||!data.length){ data = (D&&D.shipments)||[]; }
-  // Count by status — no dependency on SK
   var cnt = {'Shipped':0,'In Progress':0,'Plan':0,'Booking Secured':0,'Delayed':0,'Open':0};
   data.forEach(function(r){
     var s = r.status||'';
@@ -1906,32 +1931,120 @@ function renderKPIs(data){
   var dl = data.filter(function(r){return r.status==='Delayed'&&(r.daysDelayed||0)>0;});
   var avg = dl.length?(dl.reduce(function(s,r){return s+(r.daysDelayed||0);},0)/dl.length).toFixed(1):'—';
   t('k4s','avg '+avg+' days');
-  // Update sidebar status counts
+  // Update filter bar status counts
   Object.keys(cnt).forEach(function(k){
     var el=document.getElementById('c-'+k)||document.getElementById('c-'+k.replace(/ /g,''));
     if(el) el.textContent=cnt[k]||0;
   });
+  // Update domestic-style KPI budget info
+  var bgt=D.budget||{};
+  var MO=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+  var act={};data.forEach(function(r){if(r.etdMonth)act[r.etdMonth]=(act[r.etdMonth]||0)+(r.invSGD||0);});
+  var tA=MO.reduce(function(s,m){return s+(act[m]||0);},0);
+  var tB=MO.reduce(function(s,m){return s+(bgt[m]?bgt[m].budgetSGD:0);},0);
+  var pct=tB>0?((tA/tB)*100).toFixed(1)+'%':'—';
+  var toGo=tB>tA?tB-tA:0;
+  t('dk-achieve', pct);
+  t('dk-togo', 'SGD '+fm(toGo));
+  var pe=document.getElementById('dk-achieve');
+  if(pe) pe.style.color=parseFloat(pct)>=100?'#00e5a0':parseFloat(pct)>=75?'#fbbf24':'#ff4757';
+  // Insight bar
+  var ib=document.getElementById('ib-text');
+  if(ib) ib.textContent='📦 '+data.length+' shipments loaded · SGD '+fm(tS)+' total value · Budget attainment: '+pct+' of SGD '+fm(tB)+' annual target';
 }
 
 function renderBudget(data){
   var MO=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
   var ML=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var act={};data.forEach(r=>{if(r.etdMonth)act[r.etdMonth]=(act[r.etdMonth]||0)+r.invSGD;});
-  var bgt=D.budget,avail=MO.filter(m=>bgt[m]);
-  var tA=0,tB=0;avail.forEach(m=>{tA+=act[m]||0;tB+=bgt[m]?.budgetSGD||0;});
-  var op=tB>0?((tA/tB)*100).toFixed(1):'—';
+  var bgt=D.budget||{};
+  var act={};(data||[]).forEach(function(r){if(r.etdMonth)act[r.etdMonth]=(act[r.etdMonth]||0)+(r.invSGD||0);});
+  var bVals=MO.map(function(m){return(bgt[m]&&bgt[m].budgetSGD)||0;});
+  var aVals=MO.map(function(m){return act[m]||0;});
+  var tA=aVals.reduce(function(s,v){return s+v;},0);
+  var tB=bVals.reduce(function(s,v){return s+v;},0);
+  var pct=tB>0?((tA/tB)*100).toFixed(1):'—';
+
+  // Update % label in chart header
+  var pl=document.getElementById('bpct-lbl');
+  if(pl){pl.textContent=pct+'%';pl.style.color=parseFloat(pct)>=100?'#00e5a0':parseFloat(pct)>=75?'#fbbf24':'#ff4757';}
+  // Also update legacy bpct if present
   var pe=document.getElementById('bpct');
-  if(pe){pe.textContent=op+'%';pe.style.color=parseFloat(op)>=100?'#00e5a0':parseFloat(op)>=75?'#fbbf24':'#ff4757';}
-  var mx=Math.max(...avail.map(m=>Math.max(act[m]||0,bgt[m]?.budgetSGD||0)),1);
-  var c=document.getElementById('bchart');if(!c)return;c.innerHTML='';
-  avail.slice(0,8).forEach((m,i)=>{
-    var a=act[m]||0,b=bgt[m]?.budgetSGD||0;if(!a&&!b)return;
-    var p=b>0?(a/b)*100:0,col=p>=100?'#00e5a0':p>=75?'#fbbf24':'#ff4757';
-    var d=document.createElement('div');d.className='bm';
-    d.innerHTML='<div class="bm-top"><span style="color:#6b7280;font-family:monospace;font-size:10px">'+ML[MO.indexOf(m)]+'</span><span style="font-family:monospace;font-size:10px">SGD '+fm(a)+'</span><span style="font-family:monospace;font-size:10px;color:'+col+'">'+p.toFixed(0)+'%</span></div>'
-      +'<div class="bm-bar"><div class="bm-fill" style="width:'+((a/mx)*100).toFixed(0)+'%;background:'+col+'"></div>'
-      +'<div class="bm-mark" style="left:'+((b/mx)*100).toFixed(0)+'%"></div></div>';
-    c.appendChild(d);
+  if(pe){pe.textContent=pct+'%';pe.style.color=parseFloat(pct)>=100?'#00e5a0':parseFloat(pct)>=75?'#fbbf24':'#ff4757';}
+
+  // Budget total label
+  var btl=document.getElementById('budget-total-lbl');
+  if(btl) btl.textContent='Budget: SGD '+Math.round(tB).toLocaleString()+' · Actual: SGD '+Math.round(tA).toLocaleString();
+
+  // Chart.js bar chart on canvas#bc
+  if(typeof Chart!=='undefined'){
+    var cv=document.getElementById('bc');
+    if(cv){
+      destroyChart('budget');
+      var ctx=cv.getContext('2d');
+      _charts.budget=new Chart(ctx,{
+        type:'bar',
+        data:{labels:ML,datasets:[
+          {label:'Budget (SGD)',data:bVals,backgroundColor:'rgba(219,234,254,0.8)',borderColor:'#93c5fd',borderWidth:1.5,borderRadius:3,order:2},
+          {label:'Actual Shipments',data:aVals,backgroundColor:aVals.map(function(v,i){
+            var b=bVals[i]||1;
+            return v>=b?'rgba(5,150,105,.8)':v>=b*.75?'rgba(245,158,11,.8)':'rgba(239,68,68,.75)';
+          }),borderRadius:5,order:1}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:true,position:'top',labels:{font:{size:11,family:'Inter'},boxWidth:10,padding:10}},
+            tooltip:{callbacks:{label:function(c){return c.dataset.label+': SGD '+Math.round(c.parsed.y).toLocaleString();}}}},
+          scales:{
+            x:{grid:{display:false},ticks:{font:{size:11,family:'Inter'}}},
+            y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:10,family:'Inter'},callback:function(v){return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v;}}}
+          }
+        }
+      });
+    }
+  }
+
+  // Month tiles
+  renderMonthTiles(data, act, bgt, MO, ML);
+}
+
+function renderMonthTiles(data, act, bgt, MO, ML){
+  var container=document.getElementById('month-tiles');
+  if(!container) return;
+  container.innerHTML=MO.map(function(m,i){
+    var a=act[m]||0, b=(bgt[m]&&bgt[m].budgetSGD)||0;
+    if(!a&&!b) return '';
+    var pct=b>0?((a/b)*100).toFixed(0):0;
+    var col=pct>=100?'#00e5a0':pct>=75?'#fbbf24':'#ff4757';
+    var bg=pct>=100?'rgba(0,229,160,.12)':pct>=75?'rgba(251,191,36,.12)':'rgba(239,68,68,.1)';
+    return '<div class="mt">'
+      +'<b>'+ML[i]+' 26</b>'
+      +'<div><span class="mt-pct" style="color:'+col+';background:'+bg+'">'+pct+'%</span></div>'
+      +'<div class="mt-val">'+fm(a)+'</div>'
+      +'<div class="mt-bgt">Bgt: '+fm(b)+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderTrendChart(data){
+  if(typeof Chart==='undefined') return;
+  var cv=document.getElementById('trendChart');
+  if(!cv) return;
+  var MO=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+  var ML=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var act={};(data||D.shipments||[]).forEach(function(r){if(r.etdMonth)act[r.etdMonth]=(act[r.etdMonth]||0)+(r.invSGD||0);});
+  var aVals=MO.map(function(m){return act[m]||0;});
+  var total=aVals.reduce(function(s,v){return s+v;},0);
+  var tl=document.getElementById('trend-total');
+  if(tl) tl.textContent='SGD '+fm(total);
+  destroyChart('trend');
+  _charts.trend=new Chart(cv.getContext('2d'),{
+    type:'bar',
+    data:{labels:ML,datasets:[
+      {label:'SGD Value',data:aVals,backgroundColor:'rgba(0,184,255,.6)',borderColor:'#00b8ff',borderWidth:1.5,borderRadius:4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return 'SGD '+Math.round(c.parsed.y).toLocaleString();}}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:10},callback:function(v){return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v;}}}}
+    }
   });
 }
 
@@ -2065,14 +2178,13 @@ function goPage(p){
     if(p==='stats'        && tx.includes('stat'))  tb.classList.add('on');
     if(p==='map'          && tx.includes('map'))   tb.classList.add('on');
     if(p==='tracker'      &&(tx.includes('track')||tx.includes('live'))) tb.classList.add('on');
-    if(p==='delay-analysis'&&(tx.includes('delay')||tx.includes('analys'))) tb.classList.add('on');
+    if(false&&(tx.includes('delay')||tx.includes('analys'))) tb.classList.add('on');
     if(p==='open-orders'  &&(tx.includes('open')||tx.includes('order')))  tb.classList.add('on');
   });
   stopT(); page=p;
   if(p==='stats')         { renderStats(); }
   if(p==='map')           { renderMap(); }
   if(p==='tracker')       { renderVList(); updateTrackerMap(); startT(); }
-  if(p==='delay-analysis'){ renderDA(); }
   if(p==='open-orders')   { renderOO(); }
 }
 
@@ -2378,11 +2490,8 @@ function renderMap(){
     if(fOrigin&&f!==fOrigin)return;
     var t2=r.shipTo.split(',')[0].trim().toUpperCase().replace(/\s*\(VIA[^)]+\)/gi,'').trim();
     var k=f+'|||'+t2;
-    if(!rm[k])rm[k]={f:f,t:t2,n:0,d:0,sg:0,co:r.country,etds:[],shipped:0,inprog:0,plan:0,booking:0,vessel:'',voyage:'',imo:''};
+    if(!rm[k])rm[k]={f:f,t:t2,n:0,d:0,sg:0,co:r.country,etds:[],shipped:0,inprog:0,plan:0,booking:0};
     rm[k].n++;rm[k].sg+=r.invSGD;
-    if(!rm[k].vessel&&r.vessel)rm[k].vessel=r.vessel;
-    if(!rm[k].voyage&&r.voyage)rm[k].voyage=r.voyage;
-    if(!rm[k].imo&&r.imo)rm[k].imo=r.imo;
     if(r.status==='Delayed')rm[k].d++;
     else if(r.status==='Shipped')rm[k].shipped++;
     else if(r.status==='In Progress')rm[k].inprog++;
@@ -2590,18 +2699,6 @@ function renderMap(){
       +'</div>'
       // NEW: Status Mix column
       +'<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center">'+statusBadges+'</div>'
-      // Vessel column
-      +'<div style="line-height:1.4">'
-        +'<div style="font-size:12px;color:#0ea5e9;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(r.vessel||'<span style="color:#9ca3af">—</span>')+'</div>'
-      +'</div>'
-      // Voyage column
-      +'<div style="line-height:1.4">'
-        +'<div style="font-family:monospace;font-size:12px;color:#7c3aed;font-weight:600">'+(r.voyage||'<span style="color:#9ca3af">—</span>')+'</div>'
-      +'</div>'
-      // IMO column
-      +'<div style="line-height:1.4">'
-        +'<div style="font-family:monospace;font-size:12px;color:#64748b">'+(r.imo||'<span style="color:#9ca3af">—</span>')+'</div>'
-      +'</div>'
       +'</div>';
   }).join('');
 }
@@ -3790,7 +3887,6 @@ function renderPage(p,data){
   else if(p==='stats')     renderStats(data);
   else if(p==='map')       {try{renderMap();}catch(e){}}
   else if(p==='tracker')   {try{renderVList();updateTrackerMap();}catch(e){}}
-  else if(p==='delay-analysis') renderDA(data);
   else if(p==='open-orders')    renderOO(data);
 }
 
@@ -3834,6 +3930,43 @@ function renderDash(data){
 }
 
 // ── BUDGET CHART ──────────────────────────────────────────────────────────
+function renderBudgetChart(data){
+  if(typeof Chart==='undefined'){console.warn('Chart.js not loaded');return;}
+  var bgt=D.budget||{};
+  var months=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+  var labels=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var act={};
+  (data||D.shipments||[]).forEach(function(r){var m=r.etdMonth||'';if(m)act[m]=(act[m]||0)+(r.invSGD||0);});
+  var bVals=months.map(function(m){return(bgt[m]&&bgt[m].budgetSGD)||0;});
+  var aVals=months.map(function(m){return act[m]||0;});
+  var hasBgt=bVals.some(function(v){return v>0;});
+  var bDiv=document.getElementById('bchart');if(!bDiv)return;
+  destroyChart('budget');
+  bDiv.style.height='180px';bDiv.style.position='relative';
+  bDiv.innerHTML='<canvas id="bc"></canvas>';
+  var ctx=document.getElementById('bc').getContext('2d');
+  _charts.budget=new Chart(ctx,{
+    type:'bar',
+    data:{labels:labels,datasets:[
+      {label:'Budget',data:bVals,backgroundColor:'rgba(148,163,184,0.35)',borderColor:'rgba(148,163,184,0.8)',borderWidth:1.5,borderRadius:3,order:2},
+      {label:'Actual',data:aVals,backgroundColor:aVals.map(function(v,i){return v>=(bVals[i]||Infinity)?'rgba(5,150,105,.8)':v>=(bVals[i]||1)*.75?'rgba(245,158,11,.8)':'rgba(239,68,68,.8)';}),borderRadius:4,order:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'top',labels:{font:{size:11,family:'Inter'},boxWidth:10,padding:10}},
+               tooltip:{callbacks:{label:function(c){return c.dataset.label+': SGD '+Math.round(c.parsed.y).toLocaleString();}}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:11,family:'Inter'}}},
+        y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10,family:'Inter'},callback:function(v){return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v;}}}
+      }
+    }
+  });
+  // Update % label
+  var tA=aVals.reduce(function(s,v){return s+v;},0),tB=bVals.reduce(function(s,v){return s+v;},0);
+  var pct=tB>0?(tA/tB*100).toFixed(1):'—';
+  var pe=document.getElementById('bpct');
+  if(pe){pe.textContent=hasBgt?pct+'%':'—';pe.style.color=parseFloat(pct)>=100?'#059669':parseFloat(pct)>=75?'#f59e0b':'#ef4444';}
+  console.log('[BudgetChart] OK — actuals:',aVals.filter(function(v){return v>0;}).length,'months with data');
+}
 
 // ── STATUS DONUT ──────────────────────────────────────────────────────────
 function renderStatusDonut(data){
@@ -4003,7 +4136,7 @@ goPage=function(p){
     if(p==='stats'&&tx.includes('stat'))t.classList.add('on');
     if(p==='map'&&tx.includes('map'))t.classList.add('on');
     if(p==='tracker'&&(tx.includes('track')||tx.includes('live')))t.classList.add('on');
-    if(p==='delay-analysis'&&(tx.includes('delay')||tx.includes('anal')))t.classList.add('on');
+    if(false))t.classList.add('on');
     if(p==='open-orders'&&(tx.includes('open')||tx.includes('order')))t.classList.add('on');
   });
   try{stopT();}catch(e){}if(typeof page!=='undefined')page=p;
@@ -5543,6 +5676,45 @@ function setBudgetCustomerFilter(customer){
 }
 
 // ── Budget vs Actual summary card by customer ─────────────────────────────
+function renderBudgetVsActualCards(){
+  var container = document.getElementById('budget-vs-actual-cards');
+  if(!container) return;
+
+  var bgt = D.budget||{};
+  var custTotals = {};
+  var GL_MONTHS_LIST = ['2026-01','2026-02','2026-03','2026-04','2026-05'];
+
+  Object.values(bgt).forEach(function(mo){
+    if(!mo.byCustomer) return;
+    Object.keys(mo.byCustomer).forEach(function(c){
+      custTotals[c] = (custTotals[c]||0) + (mo.byCustomer[c]||0);
+    });
+  });
+
+  // GL actuals total
+  var glTotal = typeof GL_ACTUALS !== 'undefined'
+    ? GL_MONTHS_LIST.reduce(function(s,m){return s+(GL_ACTUALS[m]?GL_ACTUALS[m].actualSGD:0);},0)
+    : 0;
+  var allBgtTotal = Object.values(custTotals).reduce(function(s,v){return s+v;},0);
+  var pct = allBgtTotal > 0 ? (glTotal/allBgtTotal*100).toFixed(1) : 0;
+
+  container.innerHTML =
+    '<div style="background:#fff;border:1px solid #e8eaed;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
+      +'<h3 style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:0">Budget vs Actual · YTD Jan–May 2026</h3>'
+      +'<div style="font-size:20px;font-weight:900;color:'+(parseFloat(pct)>=80?'#059669':parseFloat(pct)>=60?'#d97706':'#dc2626')+'">'+(pct||'—')+'%</div>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">'
+      +'<div style="text-align:center;padding:10px;background:#f0f9ff;border-radius:8px"><div style="font-size:10px;color:#9ca3af;margin-bottom:3px;font-weight:600;text-transform:uppercase">YTD Actual (GL)</div><div style="font-size:18px;font-weight:900;color:#2563eb">SGD '+fm(glTotal)+'</div></div>'
+      +'<div style="text-align:center;padding:10px;background:#f0fdf4;border-radius:8px"><div style="font-size:10px;color:#9ca3af;margin-bottom:3px;font-weight:600;text-transform:uppercase">YTD Budget</div><div style="font-size:18px;font-weight:900;color:#059669">SGD '+fm(allBgtTotal/12*5)+'</div><div style="font-size:9px;color:#9ca3af">5-month portion</div></div>'
+      +'<div style="text-align:center;padding:10px;background:#fef9f0;border-radius:8px"><div style="font-size:10px;color:#9ca3af;margin-bottom:3px;font-weight:600;text-transform:uppercase">Full Year Budget</div><div style="font-size:18px;font-weight:900;color:#d97706">SGD '+fm(allBgtTotal)+'</div></div>'
+    +'</div>'
+    +'<div id="customer-budget-bar"></div>'
+    +'</div>';
+
+  var customerFilter = (document.getElementById('budget-customer-filter')||{}).value||'';
+  renderCustomerBudgetBar(customerFilter, '', '');
+}
 
 // ── Inject Budget Summary into Dashboard ──────────────────────────────────
 window.addEventListener('load', function(){
