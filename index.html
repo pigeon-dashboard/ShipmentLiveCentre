@@ -3530,119 +3530,6 @@ setInterval(function(){
     }) + ' SGT · ' + D.shipments.length + ' records';
   }
 }, 1000);
-<!-- External Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
-/* ═══════════════════════════════════════════════════════
-   THEME: Clean Corporate Light — matching reference style
-   ═══════════════════════════════════════════════════════ */
-
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;background:#f0f2f5;color:#1a1a2e;-webkit-font-smoothing:antialiased;}
-
-/* ── App shell ──────────────────────────────────────────────────────────── */
-#app{background:#f0f2f5!important;}
-.main{background:#f0f2f5!important;padding:16px!important;}
-
-/* ── Header ──────────────────────────────────────────────────────────────── */
-.hdr{background:linear-gradient(135deg,#2c3e50 0%,#3d5166 100%)!important;padding:12px 20px!important;box-shadow:0 2px 8px rgba(0,0,0,.2)!important;}
-.brand-name{font-size:17px!important;font-weight:800!important;color:#fff!important;letter-spacing:.3px!important;}
-.brand-sub{font-size:11px!important;font-weight:500!important;color:rgba(255,255,255,.7)!important;letter-spacing:1.5px!important;text-transform:uppercase!important;}
-#ts{font-size:12px!important;font-weight:500!important;color:rgba(255,255,255,.85)!important;}
-.live-dot,.trk-live-dot{background:#22c55e!important;}
-
-/* ── Tab navigation ────────────────────────────────────────────────────── */
-.tabs{background:#fff!important;border-bottom:1px solid #e8eaed!important;padding:0 16px!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;}
-.tab{font-size:13px!important;font-weight:600!important;color:#6b7280!important;padding:12px 16px!important;border-bottom:3px solid transparent!important;cursor:pointer!important;transition:all .15s!important;letter-spacing:.2px!important;}
-.tab:hover{color:#2563eb!important;background:rgba(37,99,235,.04)!important;}
-.tab.on{color:#2563eb!important;border-bottom-color:#2563eb!important;background:transparent!important;}
-
-/* ── Sidebar ──────────────────────────────────────────────────────────── */
-.sidebar{background:#fff!important;border-right:1px solid #e8eaed!important;padding:16px 14px!important;box-shadow:2px 0 8px rgba(0,0,0,.04)!important;}
-.sb-hdr,.sb-section-title{font-size:10px!important;font-weight:700!important;letter-spacing:1.2px!important;text-transform:uppercase!important;color:#9ca3af!important;margin-bottom:8px!important;}
-.sidebar label,.sidebar .lbl{font-size:13px!important;font-weight:500!important;color:#374151!important;}
-.sidebar input[type=checkbox]{accent-color:#2563eb;}
-.sidebar select{font-size:13px!important;background:#f9fafb!important;border:1px solid #e5e7eb!important;border-radius:8px!important;padding:7px 10px!important;color:#374151!important;width:100%!important;}
-
-/* ── KPI cards ──────────────────────────────────────────────────────────── */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;}
-.kpi{background:#fff!important;border:1px solid #e8eaed!important;border-radius:12px!important;padding:18px 20px!important;cursor:pointer!important;transition:all .2s!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;display:flex!important;flex-direction:column!important;gap:4px!important;}
-.kpi:hover{transform:translateY(-3px)!important;box-shadow:0 6px 20px rgba(0,0,0,.12)!important;border-color:#93c5fd!important;}
-.kpi.active-filter{border-color:#2563eb!important;box-shadow:0 0 0 3px rgba(37,99,235,.15)!important;transform:translateY(-2px)!important;}
-.kpi-l{font-size:11px!important;font-weight:700!important;letter-spacing:.8px!important;text-transform:uppercase!important;color:#6b7280!important;}
-.kpi-v{font-size:36px!important;font-weight:900!important;line-height:1.1!important;color:#111827!important;}
-.kpi-s{font-size:12px!important;font-weight:500!important;color:#9ca3af!important;}
-.kpi.k1 .kpi-v{color:#059669!important;}
-.kpi.k2 .kpi-v{color:#2563eb!important;}
-.kpi.k3 .kpi-v{color:#7c3aed!important;}
-.kpi.k4 .kpi-v{color:#dc2626!important;}
-.kpi.k5 .kpi-v{color:#111827!important;}
-
-/* ── Panels / Cards ────────────────────────────────────────────────────── */
-.panel,.card,.widget{background:#fff!important;border:1px solid #e8eaed!important;border-radius:12px!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;}
-.panel-hdr,.ph{font-size:11px!important;font-weight:700!important;letter-spacing:.8px!important;text-transform:uppercase!important;color:#6b7280!important;padding:14px 16px!important;border-bottom:1px solid #f3f4f6!important;}
-
-/* ── Tables ──────────────────────────────────────────────────────────── */
-table{width:100%;border-collapse:collapse;font-size:13px;}
-thead{background:#f9fafb!important;}
-thead th{font-size:11px!important;font-weight:700!important;letter-spacing:.6px!important;text-transform:uppercase!important;color:#6b7280!important;padding:10px 14px!important;border-bottom:2px solid #e5e7eb!important;white-space:nowrap;}
-tbody td{padding:11px 14px!important;color:#374151!important;border-bottom:1px solid #f3f4f6!important;font-size:13px!important;}
-tbody tr:hover{background:#f0f7ff!important;}
-tbody tr:last-child td{border-bottom:none!important;}
-
-/* ── Buttons ──────────────────────────────────────────────────────────── */
-button{font-family:'Inter',system-ui,sans-serif!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;transition:all .15s!important;}
-.btn-primary{background:#2563eb!important;color:#fff!important;border:none!important;padding:9px 18px!important;border-radius:8px!important;}
-.btn-primary:hover{background:#1d4ed8!important;}
-
-/* ── Inputs / Selects ─────────────────────────────────────────────────── */
-select,input[type=text],input[type=search],input[type=date]{font-family:'Inter',system-ui,sans-serif!important;font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:8px!important;padding:8px 12px!important;background:#fff!important;color:#374151!important;outline:none!important;}
-select:focus,input:focus{border-color:#93c5fd!important;box-shadow:0 0 0 3px rgba(37,99,235,.1)!important;}
-
-/* ── Status badges ────────────────────────────────────────────────────── */
-.badge-shipped{background:#dcfce7;color:#15803d;border:1px solid #86efac;}
-.badge-inprogress{background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;}
-.badge-delayed{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;}
-.badge-plan{background:#ede9fe;color:#6d28d9;border:1px solid #c4b5fd;}
-
-/* ── Month cards grid (reference style) ──────────────────────────────── */
-.month-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px;}
-.month-card{background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:all .2s;}
-.month-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1);}
-.month-card .mc-label{font-size:13px;font-weight:700;color:#374151;margin-bottom:2px;}
-.month-card .mc-pct{font-size:11px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:6px;}
-.month-card .mc-value{font-size:22px;font-weight:900;color:#2563eb;margin:4px 0;}
-.month-card .mc-budget{font-size:11px;color:#9ca3af;}
-.month-card .mc-bar{height:4px;background:#f3f4f6;border-radius:2px;margin-top:8px;overflow:hidden;}
-.month-card .mc-fill{height:100%;border-radius:2px;transition:width .5s;}
-
-/* ── Charts ───────────────────────────────────────────────────────────── */
-canvas{max-width:100%!important;}
-
-/* ── Scrollbars ────────────────────────────────────────────────────────── */
-::-webkit-scrollbar{width:6px;height:6px;}
-::-webkit-scrollbar-track{background:#f1f5f9;}
-::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
-
-/* ── Login gate ─────────────────────────────────────────────────────────── */
-#login-gate{background:linear-gradient(135deg,#1e3a5f 0%,#2c3e50 50%,#1a1a2e 100%)!important;}
-#login-gate .login-card{background:rgba(255,255,255,.98);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
-
-/* ── User bar ────────────────────────────────────────────────────────────── */
-#user-bar{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:0 4px 16px rgba(0,0,0,.1)!important;}
-#user-avatar{background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;}
-
-/* ── Loader ──────────────────────────────────────────────────────────────── */
-#loader{background:#f0f2f5!important;color:#2563eb!important;}
-#loader h1{color:#1e3a5f!important;font-size:28px!important;font-weight:800!important;letter-spacing:2px!important;}
-#loader p{color:#6b7280!important;}
-
-/* Tab 5 chart containers */
-.da-chart-wrap{width:100%;position:relative;}
-</style>
 
 // ════════════════════════════════════════════════════════════════════
 // SHIPMENT COMMAND CENTRE — SINGLE COMPREHENSIVE ENGINE v3
@@ -4191,53 +4078,6 @@ window.addEventListener('load',function(){
   console.log('[Startup] Complete');
 })();
 
-</body>
-<style>
-/* ── Additional theme refinements ──────────────────────────────────────── */
-
-/* Header stats value */
-.hdr-stat-val{font-size:22px!important;font-weight:900!important;color:#fff!important;}
-.hdr-stat-lbl{font-size:10px!important;color:rgba(255,255,255,.7)!important;text-transform:uppercase!important;letter-spacing:1px!important;}
-
-/* Filter bar */
-.filter-bar{background:#fff!important;border:1px solid #e8eaed!important;border-radius:12px!important;padding:14px 18px!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
-.filter-bar label{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#9ca3af!important;display:block!important;margin-bottom:3px!important;}
-.filter-bar select,.filter-bar input{font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:8px!important;padding:7px 12px!important;background:#f9fafb!important;min-width:130px!important;}
-.filter-bar .f-reset{background:#374151!important;color:#fff!important;border:none!important;padding:8px 16px!important;border-radius:8px!important;font-size:12px!important;font-weight:600!important;}
-
-/* Insight cards (top 4 summary cards) */
-.insight-cards{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:12px!important;margin-bottom:16px!important;}
-.insight-card{background:#fff!important;border:1px solid #e8eaed!important;border-radius:12px!important;padding:16px 18px!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;display:flex!important;align-items:flex-start!important;gap:14px!important;}
-.insight-icon{width:44px!important;height:44px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;font-size:18px!important;}
-
-/* KPI row (bottom stats) */
-.kpi-row{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:12px!important;margin-bottom:16px!important;}
-.kpi-stat{background:#fff!important;border:1px solid #e8eaed!important;border-radius:12px!important;padding:16px 18px!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;display:flex!important;align-items:center!important;gap:14px!important;}
-.kpi-stat-icon{width:44px!important;height:44px!important;border-radius:50%!important;background:#dc2626!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;font-size:18px!important;flex-shrink:0!important;}
-.kpi-stat-val{font-size:26px!important;font-weight:900!important;color:#1a1a2e!important;line-height:1.1!important;}
-.kpi-stat-lbl{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:#9ca3af!important;}
-.kpi-stat-sub{font-size:11px!important;color:#9ca3af!important;margin-top:2px!important;}
-
-/* Chart panels */
-.chart-grid-3{display:grid!important;grid-template-columns:1fr 1.2fr 0.8fr!important;gap:14px!important;margin-bottom:16px!important;}
-.chart-panel{background:#fff!important;border:1px solid #e8eaed!important;border-radius:12px!important;padding:16px 18px!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;}
-.chart-title{font-size:13px!important;font-weight:700!important;color:#374151!important;margin-bottom:14px!important;}
-
-/* Table panel */
-.table-panel{background:#fff!important;border:1px solid #e8eaed!important;border-radius:12px!important;overflow:hidden!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important;}
-.table-panel-hdr{padding:14px 18px!important;border-bottom:1px solid #f3f4f6!important;display:flex!important;align-items:center!important;justify-content:space-between!important;}
-.table-panel-title{font-size:13px!important;font-weight:700!important;color:#374151!important;}
-
-/* Budget progress bar */
-.budget-bar-wrap{margin:6px 0 2px!important;}
-.budget-bar-bg{height:5px!important;background:#f3f4f6!important;border-radius:3px!important;overflow:hidden!important;}
-.budget-bar-fill{height:100%!important;border-radius:3px!important;transition:width .6s ease!important;}
-
-/* Sidebar status items */
-.sb-status-item{display:flex!important;align-items:center!important;justify-content:space-between!important;padding:5px 0!important;}
-.sb-status-dot{width:8px!important;height:8px!important;border-radius:50%!important;flex-shrink:0!important;}
-.sb-status-count{font-size:12px!important;font-weight:700!important;color:#374151!important;background:#f3f4f6!important;padding:1px 6px!important;border-radius:8px!important;}
-</style>
 
 
 // ═══════════════════════════════════════════════════════════════
@@ -4448,7 +4288,6 @@ window.addEventListener('load', function(){
 
 console.log('[Theme v3] Corporate light theme loaded');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // BUDGET FILTER — Country & Channel (ex-Singapore)
@@ -4675,7 +4514,6 @@ window.addEventListener('load', function(){
 
 console.log('[Budget] Country filter loaded — ex-Singapore, 13 markets');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // COLUMN MAPPING FIX: Col W=Month, Col S=Actual ETD, Col R=Planned ETD
@@ -4837,7 +4675,6 @@ mapData = function(rows2){
 
 console.log('[ColFix] Col W=Month, Col S=Actual ETD, Col R=Planned ETD — fixed');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // ROUTE MAP — Live ETD (Col S) + AIS ETA from MyShipTracking
@@ -5070,7 +4907,6 @@ renderAll = function(src){
 
 console.log('[RouteMap] Live ETD + AIS ETA engine loaded');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // HYBRID ACTUAL: GL (Jan-May) + SharePoint (Jun+) for Dashboard
@@ -5322,7 +5158,6 @@ window.addEventListener('load', function(){
 
 console.log('[GL] Hybrid actuals: GL Jan-May + SharePoint Jun+ loaded');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // INCOME STATEMENT — TAB 7
@@ -5620,7 +5455,6 @@ renderAll = function(src){
 
 console.log('[IS] Income Statement engine ready');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // BUDGET CUSTOMER / CHANNEL FILTER — Tab 1 Dashboard
@@ -5777,7 +5611,6 @@ window.addEventListener('load', function(){
 
 console.log('[BudgetFilter v2] Customer+Channel+Country filter panel loaded');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // INCOME STATEMENT v2 — Reference Design Match
@@ -6075,7 +5908,6 @@ renderAll = function(src){
 
 console.log('[IS v2] Income Statement ready');
 
-</body>
 
 // ═══════════════════════════════════════════════════════════════
 // COMPREHENSIVE FIX — Budget, Month Filter, Charts, IS Tab
