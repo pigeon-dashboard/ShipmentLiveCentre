@@ -2738,51 +2738,7 @@ function clearMapFilters(){
   renderMap();
 }
 
-function highlightRoute(from,to){ flyToRoute(from,to); if(false){
-  var cv=document.getElementById('wmap');if(!cv)return;
-  var W=cv.width,H=cv.height,ctx=cv.getContext('2d');
-  var fcr=getC(from),tcr=getC(to);if(!fcr||!tcr)return;
-  var p1=ll2xy(fcr[0],fcr[1],W,H),p2=ll2xy(tcr[0],tcr[1],W,H);
-  var mx=(p1[0]+p2[0])/2,my=Math.min(p1[1],p2[1])-50;
-
-  // Draw highlighted arc
-  ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.quadraticCurveTo(mx,my,p2[0],p2[1]);
-  ctx.strokeStyle='rgba(255,235,59,0.9)';ctx.lineWidth=3;
-  ctx.shadowColor='#ffeb3b';ctx.shadowBlur=8;ctx.stroke();ctx.shadowBlur=0;
-
-  // Draw info box at midpoint
-  var routeData=null;
-  var rm2={};D.shipments.forEach(function(r){var f=r.shipFrom.split(',')[0].trim().toUpperCase();var t2=r.shipTo.split(',')[0].trim().toUpperCase().replace(/\s*\(VIA[^)]+\)/gi,'').trim();if(f===from&&t2===to){var k=f+'|||'+t2;if(!rm2[k])rm2[k]={f:f,t:t2,n:0,d:0,sg:0,co:r.country};rm2[k].n++;rm2[k].sg+=r.invSGD;if(r.status==='Delayed')rm2[k].d++;}});
-  var rd=rm2[from+'|||'+to];
-  if(rd){
-    var ri=getRI(rd.f,rd.co);
-    var teu=estTEU(rd.sg,rd.n);
-    var frt=calcFreight(rd.f,rd.co,teu,ri.km||3000);
-    var bx=Math.min(mx+10,W-220),by=Math.max(my-120,10);
-    // Tooltip box
-    ctx.fillStyle='rgba(13,17,23,0.92)';
-    ctx.strokeStyle='#ffeb3b';ctx.lineWidth=1;
-    var boxW=210,boxH=115;
-    ctx.beginPath();if(ctx.roundRect)ctx.roundRect(bx,by,boxW,boxH,7);else ctx.rect(bx,by,boxW,boxH);
-    ctx.fill();ctx.stroke();
-    ctx.fillStyle='#ffeb3b';ctx.font='bold 12px monospace';ctx.textAlign='left';
-    ctx.fillText(from+' → '+to,bx+10,by+18);
-    var rows=[
-      ['Shipments:',rd.n+' | '+rd.d+' delayed','#e8eaf0'],
-      ['Distance:',ri.km?ri.km.toLocaleString()+' km':'—','#6b7280'],
-      ['Est. Days:',ri.days?ri.days+'d':'—','#00b8ff'],
-      ['Est. TEU:',teu+' containers','#a78bfa'],
-      ['Freight/TEU:','$'+frt.perTEU.toLocaleString()+' USD','#fbbf24'],
-      ['Total Freight:','$'+frt.total.toLocaleString()+' USD','#00e5a0'],
-    ];
-    rows.forEach(function(row,i){
-      ctx.fillStyle='#6b7280';ctx.font='10px monospace';ctx.textAlign='left';ctx.fillText(row[0],bx+10,by+34+i*13);
-      ctx.fillStyle=row[2];ctx.font='bold 10px monospace';ctx.textAlign='right';ctx.fillText(row[1],bx+boxW-10,by+34+i*13);
-    });
-  }
-  setTimeout(renderMap,2500);
-  }
-}
+function highlightRoute(from,to){ flyToRoute(from,to); }
 
 function drawCont(ctx,W,H){[[[-168,72],[-52,72],[-52,25],[-90,15],[-92,18],[-118,22],[-122,37],[-124,48],[-140,60],[-168,72]],[[-82,12],[-35,12],[-35,-5],[-35,-55],[-72,-55],[-82,12]],[[2,52],[30,62],[30,42],[10,35],[2,43],[2,52]],[[30,62],[60,72],[50,52],[30,42],[30,62]],[[-18,15],[50,15],[52,10],[25,-35],[-18,-35],[-18,15]],[[50,10],[140,10],[140,72],[50,72],[50,10]],[[114,-22],[154,-22],[150,-38],[130,-38],[115,-34],[114,-22]],[[166,-34],[178,-38],[172,-46],[166,-46],[166,-34]]].forEach(function(pts){ctx.beginPath();pts.forEach(function(p,i){var xy=ll2xy(p[0],p[1],W,H);i===0?ctx.moveTo(xy[0],xy[1]):ctx.lineTo(xy[0],xy[1]);});ctx.closePath();ctx.fillStyle='#152030';ctx.fill();ctx.strokeStyle='#1e3a50';ctx.lineWidth=.5;ctx.stroke();});}
 
@@ -4023,7 +3979,6 @@ goPage=function(p){
     if(p==='stats'&&tx.includes('stat'))t.classList.add('on');
     if(p==='map'&&tx.includes('map'))t.classList.add('on');
     if(p==='tracker'&&(tx.includes('track')||tx.includes('live')))t.classList.add('on');
-    if(false))t.classList.add('on');
     if(p==='open-orders'&&(tx.includes('open')||tx.includes('order')))t.classList.add('on');
   });
   try{stopT();}catch(e){}if(typeof page!=='undefined')page=p;
