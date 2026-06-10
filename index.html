@@ -3362,8 +3362,6 @@ async function loadLive(){
       var voyageNo   = _lRaw;
       if(!window._colLogged){ window._colLogged=true;
         console.log('[CSV Col K] header="'+_vKeys[10]+'" val="'+_kRaw+'" | [Col L] header="'+_vKeys[11]+'" val="'+_lRaw+'"'); }
-      // Log column K/L headers once for debugging
-      if(!window._colLogged){ window._colLogged=true; console.log('[Col K]',_keys[10],'=',r[_keys[10]]||'empty','| [Col L]',_keys[11],'=',r[_keys[11]]||'empty'); }
       return{invoice:inv,custName:cust,shipFrom:from,shipTo:to,country:extC(to),curr:curr,
         invSGD:invSGD,invUSD:invSGD/SGD2USD,etd:etd,plannedEtd:pln,status:status,rawStatus:rawSt,
         remarks:remarks,daysDelayed:days,monthName:month,risk:risk,etdMonth:etd?etd.slice(0,7):'',
